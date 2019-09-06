@@ -31,7 +31,7 @@ public class App {
 	private static Options OPTIONS = new Options();
 
 	static {
-		OPTIONS.addOption("U", "ldapUrl", true, "URL of the LDAP server, defaults to 'ldap://localhost:1389'");
+		OPTIONS.addOption("H", "ldapUrl", true, "URL of the LDAP server, defaults to 'ldap://localhost:1389'");
 		OPTIONS.addOption("B", "bindingDN", true, "DN of binding user, defaults to 'cn=Directory Manager'");
 		OPTIONS.addOption("P", "bindingPW", true, "Password of binding user");
 		OPTIONS.addOption("u", "lookupUser", true, "Name of user to lookup, defaults to '*'");
@@ -54,7 +54,7 @@ public class App {
 		final Hashtable<String, String> env = new Hashtable<String, String>();
 
 		final String factory = System.getProperty(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-		final String ldapServerUrl = cmd.getOptionValue("U", "ldap://localhost:1389"); // ldapportal.intranet.gc:389
+		final String ldapServerUrl = cmd.getOptionValue("H", "ldap://localhost:1389"); // ldapportal.intranet.gc:389
 		final String ldapUser = cmd.getOptionValue("B", "cn=Directory Manager"); // cn=SONAR_LDAP,ou=SERVICIOS,o=GC
 		final String ldapPasswd = cmd.getOptionValue("P", "password"); // Toledo2019
 
