@@ -71,7 +71,6 @@ Number of groups found : 1
 ```
 
 
-
 ## Developer notes
 
 The Gradle build uses these plugins:
@@ -87,6 +86,33 @@ The only external dependency is Apache `commons-cli`.
 
 For LDAP conectivity the following provider is used:
 `com.sun.jndi.ldap.LdapCtxFactory`.
+
+
+## Integration tests
+
+For testing the client application we can use a simple pre-configured LDAP like [OpenDJ](https://hub.docker.com/r/openidentityplatform/opendj/):
+
+```
+docker run -h ldap-01.domain.com -p 1389:1389 -p 1636:1636 -p 4444:4444 --name ldap-01 openidentityplatform/opendj
+```
+
+Test data is available at the Github repository as ldif file [Example.ldif](https://github.com/OpenIdentityPlatform/OpenDJ/blob/master/src/site/resources/Example.ldif).
+
+The import is not automated right now. If you want to preserve the import you can map a persistant volume:
+
+```
+docker run -h ldap-01.domain.com -e BASE_DN='dc=example,dc=com' -v /your_folder/data:/opt/opendj/data -p 1389:1389 -p 1636:1636 -p 4444:4444 --name ldap-01 openidentityplatform/opendj
+```
+
+
+### Testing on CentOS
+
+In order to to test the GraalVM native image on CentOS 7 a [Vagrantfile](./Vagrantfile) and an Ansible [playbook](./ansible/ldapClient-playbook.yml) is used.
+
+Manual execution may be done by calling:
+```
+ansible-playbook -v -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory ansible/ldapClient-playbook.yml
+```
 
 
 ## TODO
