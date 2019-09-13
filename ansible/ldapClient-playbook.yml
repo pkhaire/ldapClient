@@ -1,0 +1,23 @@
+- hosts: default
+  remote_user: vagrant
+  become: false
+  become_method: sudo
+  become_user: root 
+
+  tasks:
+    - name: Test
+      command: "id"
+      ignore_errors: False
+    - name: "ldap: Query without attributes"
+      command: "/vagrant_build/graal/ldapClient -H ldap://192.168.122.1:1389"
+      ignore_errors: False
+    - name: "ldap: Query with attributes"
+      command: "/vagrant_build/graal/ldapClient -H ldap://192.168.122.1:1389 -a"
+      ignore_errors: False
+    - name: "ldaps: Query without attributes"
+      command: "/vagrant_build/graal/ldapClient -H ldaps://192.168.122.1:1636"
+      ignore_errors: False
+    - name: "ldaps: Query with attributes"
+      command: "/vagrant_build/graal/ldapClient -H ldaps://192.168.122.1:1636 -a"
+      ignore_errors: False
+      
