@@ -6,6 +6,12 @@
 /build/
 /.gradle/
 
+### Vagrant ###
+/.vagrant/
+
+### Ansible ###
+*.log
+
 ### STS ###
 .apt_generated
 .classpath
