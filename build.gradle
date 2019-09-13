@@ -43,5 +43,9 @@ graal {
     mainClass 'ldapClient.App'
     outputName 'ldapClient'
     option '-H:ReflectionConfigurationFiles='+projectDir+'/src/main/resources/reflection_config.json'
+    option '--static'
+    option '--no-server'
+    option '--enable-https'
+    option '-J-Xmx2g'
 }
 
