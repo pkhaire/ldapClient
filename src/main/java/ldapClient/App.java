@@ -54,20 +54,13 @@ public class App {
 		final Hashtable<String, String> env = new Hashtable<String, String>();
 
 		final String factory = System.getProperty(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-		final String ldapServerUrl = cmd.getOptionValue("H", "ldap://localhost:1389"); // ldapportal.intranet.gc:389
-		final String ldapUser = cmd.getOptionValue("B", "cn=Directory Manager"); // cn=SONAR_LDAP,ou=SERVICIOS,o=GC
-		final String ldapPasswd = cmd.getOptionValue("P", "password"); // Toledo2019
+		final String ldapServerUrl = cmd.getOptionValue("H", "ldap://localhost:1389");
+		final String ldapUser = cmd.getOptionValue("B", "cn=Directory Manager");
+		final String ldapPasswd = cmd.getOptionValue("P", "password");
 
 		debug(Context.PROVIDER_URL + "=" + ldapServerUrl);
 		debug(Context.SECURITY_PRINCIPAL + "=" + ldapUser);
-		if (debug) {
-			System.out.print(Context.SECURITY_CREDENTIALS + "=");
-			final int len = (ldapPasswd == null) ? 0 : ldapPasswd.length();
-			for (int i = 0; i < len; i++)
-				System.out.print("*");
-			System.out.println();
-		}
-
+		
 		env.put(Context.INITIAL_CONTEXT_FACTORY, factory);
 		env.put(Context.SECURITY_PRINCIPAL, ldapUser);
 		env.put(Context.PROVIDER_URL, ldapServerUrl);
