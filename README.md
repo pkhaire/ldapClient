@@ -1,6 +1,6 @@
 # ldapClient - Simple LDAP user and group lookup tool
 
-ldapClient is a simple one-class LDAP lookup tool with the ability to search users and groups.
+ldapClient is a simple one-class LDAP lookup tool with the ability to search objects (users, groups, etc.) and display attributes.
 
 It is written in Java and built with Gradle with the option of generating a native image with GraalVM.
 
@@ -44,7 +44,7 @@ Number of groups found : 5
 
 Looking up users with filter: (&(uid=nbohr)(objectClass=inetOrgPerson))
 Number of users found : 1
-  DN = uid=nbohr,ou=People,dc=informatica,dc=dggc,dc=es
+  DN = uid=nbohr,ou=People,dc=example,dc=com
     givenName = Niels
     sn = Bohr
     telephoneNumber = +1 408 555 1212
@@ -62,11 +62,11 @@ Number of users found : 1
     homeDirectory = /home/nbohr
 Looking up groups with filter: (&(cn=HR Managers)(objectClass=groupOfUniqueNames))
 Number of groups found : 1
-  DN = cn=HR Managers,ou=groups,dc=informatica,dc=dggc,dc=es
+  DN = cn=HR Managers,ou=groups,dc=example,dc=com
     ou = groups
     description = People who can manage HR entries
     objectClass = top
-    uniqueMember = uid=kvaughan, ou=People, dc=informatica,dc=dggc,dc=es
+    uniqueMember = uid=kvaughan, ou=People, dc=example,dc=com
     cn = HR Managers
 ```
 
@@ -118,4 +118,6 @@ ansible-playbook -v -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_i
 ## TODO
 
 * Usage of `ldaps` protocol with native image
+  - See https://github.com/oracle/graal/issues/1074
+  
 
