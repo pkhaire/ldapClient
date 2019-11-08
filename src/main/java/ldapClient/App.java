@@ -3,6 +3,9 @@ package ldapClient;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -29,6 +32,8 @@ public class App {
 	private static boolean debug = false;
 
 	private static Options OPTIONS = new Options();
+
+	private static Base64.Encoder BASE64_ENC = Base64.getEncoder();
 
 	static {
 		OPTIONS.addOption("H", "ldapUrl", true, "URL of the LDAP server, defaults to 'ldap://localhost:1389'");
@@ -60,7 +65,7 @@ public class App {
 
 		debug(Context.PROVIDER_URL + "=" + ldapServerUrl);
 		debug(Context.SECURITY_PRINCIPAL + "=" + ldapUser);
-		
+
 		env.put(Context.INITIAL_CONTEXT_FACTORY, factory);
 		env.put(Context.SECURITY_PRINCIPAL, ldapUser);
 		env.put(Context.PROVIDER_URL, ldapServerUrl);
@@ -82,7 +87,7 @@ public class App {
 		Object[] args = { groupName };
 		String query = groupQueryFormat.format(args);
 
-		System.out.println("Looking up groups with filter: " + query);
+		debug("Looking up groups with filter: " + query);
 
 		SearchControls ctrls = new SearchControls();
 		ctrls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -106,7 +111,7 @@ public class App {
 		Object[] args = { userName };
 		String query = userQueryFormat.format(args);
 
-		System.out.println("Looking up users with filter: " + query);
+		debug("Looking up users with filter: " + query);
 
 		SearchControls ctrls = new SearchControls();
 		ctrls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -133,13 +138,13 @@ public class App {
 				debug("root is: " + root.getNameInNamespace());
 
 				List<SearchResult> l = lookupUsers(root, cmd);
-				System.out.println("Number of users found : " + l.size());
+				System.out.println("\n# Number of users found : " + l.size());
 				if (cmd.hasOption("a")) {
 					printSearchResult(l);
 				}
 
 				List<SearchResult> l2 = lookupGroups(root, cmd);
-				System.out.println("Number of groups found : " + l2.size());
+				System.out.println("\n# Number of groups found : " + l2.size());
 				if (cmd.hasOption("a")) {
 					printSearchResult(l2);
 				}
@@ -152,13 +157,26 @@ public class App {
 
 	public static void printSearchResult(List<SearchResult> searchResults) throws NamingException {
 		for (SearchResult searchResult : searchResults) {
-			System.out.println("  DN = " + searchResult.getName());
+			System.out.println();
+			System.out.println("dn: " + searchResult.getName());
 			Attributes attrs = searchResult.getAttributes();
 			NamingEnumeration<String> ne = attrs.getIDs();
-			while (ne.hasMoreElements()) {
-				String attrId = ne.next();
+			String[] ids = Collections.list(ne).toArray(new String[] {});
+			Arrays.sort(ids);
+			for (int i = 0; i < ids.length; i++) {
+				String attrId = ids[i];
 				Attribute attr = attrs.get(attrId);
-				System.out.println("    " + attrId + " = " + attr.get());
+				NamingEnumeration<?> attrValues = attr.getAll();
+				while (attrValues.hasMore()) {
+					Object value = attrValues.next();
+					String printValue = "";
+					if (String.class.equals(value.getClass())) {
+						printValue = value.toString();
+					} else {
+						printValue = BASE64_ENC.encodeToString(value.toString().getBytes());
+					}
+					System.out.println(attrId + ": " + printValue);
+				}
 			}
 		}
 	}
